@@ -3,7 +3,7 @@
 $dbUser = "root";
 $dbPassword = "coderslab";
 $dbHost = "localhost";
-$dbName = "InternetShop";
+$dbBaseName = "InternetShop";
 
 /*
 
@@ -11,7 +11,7 @@ CREATE TABLE Products(
     id INT AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     price DOUBLE NOT NULL,
-    description varchar(1000),
+    description TEXT(1500),
     PRIMARY KEY (id)
     );
 
