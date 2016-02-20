@@ -91,7 +91,50 @@ class Order
         return $this->clientId;
     }
 
+    public function showAllOrder()
+    {
+        $sql = "SELECT * FROM Products_Orders WHERE Products_Orders.order_id = $this->id;";
+        $result = self::$connection->query($sql);
 
+        if ($result == true) {
+            if ($result->num_rows > 0) {
+                $ret = [];
+                while ($row = $result->fetch_assoc()) {
+                    //var_dump($row);
+                    $details = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity']);
+                    $ret[] = $details;
+                    //var_dump($details);
+                }
+                return $ret;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+    }
+//zaaktualizowanie price_sum w bazie danych.
+    public function updatePriceSum()
+    {
+        $toUp = $this->showAllOrder();
+        $priceSum = 0;
+        foreach ($toUp as $toAdd) {
+            $product = Product::GetProductById($toAdd->getProductId());
+            $productPrice = $product->getPrice();
+            $quantity = $toAdd->getProductQuantity();
+            $priceSumPart = $quantity * $productPrice;
+            $priceSum += $priceSumPart;
+        }
+
+        $sql = "UPDATE Orders SET price_sum = $priceSum WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+        if($result == TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
 }

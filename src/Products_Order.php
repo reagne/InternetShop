@@ -22,7 +22,7 @@ class Products_Order
 
     }
 
-    static public function createPO($productId, $productQuantity, $productPrice)
+    static public function createPO($productId, $productQuantity)
     {
 
 
@@ -32,7 +32,8 @@ class Products_Order
     private $productId;
     private $orderId;
     private $productQuantity;
-    private $productPrice;
+    //private $productPrice;
+    //@TODO czy na pewno jest na to potrzebne w bazie danych?
 
     public function __construct($newId, $newProductId, $newOrderId, $newProductQuantity)
     {
@@ -40,16 +41,6 @@ class Products_Order
         $this->productId = intval($newProductId);
         $this->orderId = intval($newOrderId);
         $this->setProductQuantity($newProductQuantity);
-        $this->setProductPrice();
-
-    }
-
-    public function setProductPrice()
-    {
-        $productId = $this->getProductId();
-        $product = Product::GetProductById($productId);
-        $priceForAll = $product->getPrice() * $this->productQuantity;
-        $this->productPrice = $priceForAll;
     }
 
     public function getId()
@@ -67,11 +58,6 @@ class Products_Order
         return $this->productId;
     }
 
-    public function getProductPrice()
-    {
-        return $this->productPrice;
-    }
-
     public function getProductQuantity()
     {
         return $this->productQuantity;
@@ -79,7 +65,7 @@ class Products_Order
 
     public function setProductQuantity($productQuantity)
     {
-        $this->productQuantity = $productQuantity;
+        $this->productQuantity = intval($productQuantity);
     }
 
 

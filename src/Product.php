@@ -20,7 +20,7 @@ class Product
         $result = self::$connection->query($sql);
 
         if ($result == true) {
-            if ($result->num_rows() == 1) {
+            if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
                 $product = new Product($row['id'], $row['name'], $row['price'], $row['description'], $row['category'], $row['active']);
                 return $product;
