@@ -2,7 +2,8 @@
 require_once("./src/connection.php");
 
 unset($_SESSION['userId']);
+unset($_SESSION['adminId']);
 
-header("Location: login.php");
+header("Location: index.php");
 
 ?>

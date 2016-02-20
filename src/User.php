@@ -32,10 +32,10 @@ class User
         ];
         $hashedPassword = password_hash($password1, PASSWORD_BCRYPT, $options);
 
-        $sql = "INSERT INTO Users(firstname, lastname, email, password, address) VALUES ('$newFirstName', '$newLastName', '$newEmail', '$hashedPassword', '$newAddress')";
+        $sql = "INSERT INTO Users(first_name, last_name, email, password, address) VALUES ('$newFirstName', '$newLastName', '$newEmail', '$hashedPassword', '$newAddress')";
 
         $result = self::$connection->query($sql);
-        if ($result === TRUE) {
+        if ($result == TRUE) {
             $newUser = new User(self::$connection->insert_id, $newFirstName, $newLastName, $newEmail, $newAddress);
             return $newUser;
         }
@@ -93,7 +93,6 @@ class User
         }
         return $ret;
     }
-
 
     private $id;
     private $firstName;
@@ -184,6 +183,7 @@ class User
         }
         return false;
     }
+
 
 
 
