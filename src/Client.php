@@ -134,10 +134,80 @@ class Client
         return $this->address;
     }
 
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
     public function setAddress($newAddress)
     {
         if (strlen($newAddress) > 0) {
-            return ($this->address = $newAddress);
+            $this->address = $newAddress;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeAddress($newAddress)
+    {
+        $this->setAddress($newAddress);
+
+        $sql = "UPDATE Clients SET address = '$this->address' WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if ($result == TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeEmail($newEmail)
+    {
+        $this->setEmail($newEmail);
+
+        $sql = "UPDATE Clients SET email = '$this->email' WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if ($result == TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeFirstName($newFirstName)
+    {
+        $this->setFirstName($newFirstName);
+
+        $sql = "UPDATE Clients SET first_name = '$this->firstName' WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if ($result == TRUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeLastName($newLastName)
+    {
+        $this->setLastName($newLastName);
+        $sql = "UPDATE Clients SET last_name = '$this->lastName' WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if ($result == TRUE) {
+            return true;
         } else {
             return false;
         }
@@ -145,7 +215,6 @@ class Client
 
     public function changePassword($oldPassword, $newPassword1, $newPassword2)
     {
-
         $sql = "SELECT * FROM Clients WHERE id=$this->id";
         $result = self::$connection->query($sql);
 
@@ -184,9 +253,38 @@ class Client
         return false;
     }
 
+    public function createOrder()
+    {
+        $sql = "INSERT INTO Orders(user_id, status, price_sum) VALUES($this->id, 0, 0)";
+        $result = self::$connection->query($sql);
 
+        if($result == true)
+        {
+            $newOrder = new Order(self::$connection->insert_id, $this->id, 0, 0);
+            return $newOrder;
+        } else {
+            return false;
+        }
+    }
 
+    public function getAllMyOrders()
+    {
+        $sql = "SELECT * FROM Orders WHERE user_id = $this->id";
+        $result = self::$connection->query($sql);
 
+        if ($result == true) {
+            $ret = [];
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()){
+                   $order = ''; //new Order();
+                    $ret[] = $order;
+                }
+            }
+            return $ret;
+        } else {
+            return false;
+        }
+    }
 
 }
 
