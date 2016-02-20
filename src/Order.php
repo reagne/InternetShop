@@ -136,5 +136,31 @@ class Order
         }
     }
 
+    public function changeStatusToSent()
+    {
+        $sql = "UPDATE Orders SET status = 3 WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeStatusToPaid()
+    {
+        $sql = "UPDATE Orders SET status = 2 WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
 
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 20 Lut 2016, 17:42
+-- Czas wygenerowania: 20 Lut 2016, 22:19
 -- Wersja serwera: 5.5.47-0ubuntu0.14.04.1
 -- Wersja PHP: 5.5.9-1ubuntu4.14
 
@@ -32,14 +32,15 @@ CREATE TABLE IF NOT EXISTS `Admins` (
   `password` varchar(70) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 --
 -- Zrzut danych tabeli `Admins`
 --
 
 INSERT INTO `Admins` (`id`, `email`, `password`) VALUES
-(1, 'agata@admin.pl', '$2y$11$JpWqU8Vwox/WmvImtlb59eNwUsO4hpkqBRDiT9kvFqOIUBAek2jm6');
+(1, 'agata@admin.pl', '$2y$11$JpWqU8Vwox/WmvImtlb59eNwUsO4hpkqBRDiT9kvFqOIUBAek2jm6'),
+(43, 'regina@wp.pl', '$2y$11$NPRWvhdPA4tA0Oj354/DseTKXWRC3ef7GBkP7FEgEqTZqh2N0d4qK');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `Clients` (
   `address` varchar(150) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Zrzut danych tabeli `Clients`
@@ -85,9 +86,8 @@ CREATE TABLE IF NOT EXISTS `Clients` (
 
 INSERT INTO `Clients` (`id`, `first_name`, `last_name`, `email`, `password`, `address`) VALUES
 (1, 'Ewelina', 'Kozio³', 'ew@wp.pl', '$2y$11$qOz.XBZ6UODRtRegnpwzsOjnhL/NZNSeTSXcFkWVFCK05fbdLOoFy', 'ul. Jagienki 6\r\n67-100 Nowa Sól'),
-(2, 'Anna', 'Wezyr', 'anna@gmail.pl', '$2y$11$4uRtnef8OogqtdiLrTMiL.rjB4JgyEsEFVFFM6mSVi61F8Yr0t/Fi', 'ul. Sosnowa 23\r\n67-100 Nowa Sól'),
 (3, 'Andrzej', 'Koala', 'andrzej@wp.pl', '$2y$11$BTDLr2J8MOzz7RApSPZ4D.BIgwwZ6YDGTH1iq0P/hLGt0fyf6D0XS', 'ul. Opolska 2\r\n34-100 O³awa'),
-(4, 'Sara', 'Omo', 'sara@wp.pl', '$2y$11$RtHl7J8iGt6EfvTv79K.E.Uv.3Qh/4USu//L5l.qIjOjfk7px8s9O', 'ul. Wezuwia 4\r\n56-187 Oleszna');
+(5, 'Robert', 'Man', 'robert@wp.pl', '$2y$11$EZULwjgNPQgCH/T67M4PMupmeDqwVJ7exnr.hM6Jyehp8WOonk05G', 'ul. Kileonajkn 4');
 
 -- --------------------------------------------------------
 
@@ -116,15 +116,16 @@ CREATE TABLE IF NOT EXISTS `Orders` (
   `price_sum` double DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `client_id` (`client_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
 
 --
 -- Zrzut danych tabeli `Orders`
 --
 
 INSERT INTO `Orders` (`id`, `client_id`, `status`, `price_sum`) VALUES
-(1, 1, 1, 4034.98),
-(2, 2, 0, 0);
+(1, 1, 2, 4034.98),
+(14, 1, 3, 0),
+(15, 3, 3, NULL);
 
 -- --------------------------------------------------------
 

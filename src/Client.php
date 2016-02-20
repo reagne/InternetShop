@@ -76,7 +76,7 @@ class Client
         if ($result !== FALSE) {
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $client = new Client($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
+                    $client = new Client($row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['address']);
                     $ret[] = $client;
                 }
             }
@@ -241,6 +241,19 @@ class Client
             return false;
         }
         return false;
+    }
+
+    public function removeClient()
+    {
+        $sql = "DELETE FROM Clients WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public function createOrder()

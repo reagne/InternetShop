@@ -3,11 +3,15 @@
 
 require_once("./src/connection.php");
 
-if (!isset($_SESSION['clientId'])) {
+if (!isset($_SESSION['clientId']) && !(isset($_SESSION['adminId']))) {
     header("Location: index.php");
 }
 
 $clientId = $_SESSION['clientId'];
+
+if(isset($_SESSION['adminId'])) {
+    $clientId = $_GET['id'];
+}
 
 $client = Client::GetClientById($clientId);
 
@@ -85,6 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </label>
         </p>
     </fieldset>
+    <?php if(isset($_SESSION['clientId'])): ?>
     <fieldset>
         <legend>Zmień hasło:</legend>
         <p>
@@ -104,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </p>
 
     </fieldset>
+    <?php endif; ?>
     <input type="submit" value="Zmień">
 
 </form>

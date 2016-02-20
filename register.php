@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $client = Client::RegisterClient($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password1'], $_POST['password2'], $_POST['address']);
 
     if ($client !== FALSE) {
-        //$_SESSION['clientId'] = $client->getId();
+        $_SESSION['clientId'] = $client->getId();
         //nie tworzy nam od razu sesji tylko nadal trzeba się zalogować. jak ma być?
         //jeszcze może być header po rejestracji na główną wyrzucać jak poprawne dane rejestracji były
         echo("Rejestracja udana. Możesz się zalogować");

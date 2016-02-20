@@ -2,7 +2,7 @@
 
 require_once("./src/connection.php");
 
-if(!(isset($_SESSION['clientId']))) {
+if(!(isset($_SESSION['clientId'])) && !(isset($_SESSION['adminId']))):
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $client = Client::LogInClient($_POST['email'], $_POST['password']);
@@ -44,16 +44,12 @@ if(!(isset($_SESSION['clientId']))) {
     </fieldset>
 
     <p>
-
         Nie masz konta?
         <a href='register.php' name='register'>Zarejestuj się</a>
-
-
     </p>
 
     <?php
-}
-
+endif;
 
     echo("Menu kategorii produktów i karuzela w connection menu. jeśli istnieje sesja to jeszcze opcja wylogowania");
 
