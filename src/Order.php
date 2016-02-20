@@ -2,7 +2,6 @@
 
 class Order
 {
-
     static private $connection = null;
 
     static public function SetConnection(mysqli $newConnection)
@@ -10,7 +9,7 @@ class Order
         Order::$connection = $newConnection;
     }
 
-    static public function getOrderById($orderId)
+    static public function GetOrderById($orderId)
     {
         $sql = "SELECT * FROM Orders WHERE id = $orderId";
         $result = self::$connection->query($sql);
@@ -18,7 +17,7 @@ class Order
         if ($result == true) {
             if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
-                $order = new Order($row['id'], $row['user_id'], $row['status'], $row['price_sum']);
+                $order = new Order($row['id'], $row['client_id'], $row['status'], $row['price_sum']);
                 return $order;
             } else {
                 return false;
@@ -28,7 +27,7 @@ class Order
         }
     }
 
-    static public function getAllOrders()
+    static public function GetAllOrders()
     {
         $sql = "SELECT * FROM Orders";
         $result = self::$connection->query($sql);
@@ -37,7 +36,7 @@ class Order
             $ret = [];
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $order = new Order($row['id'], $row['user_id'], $row['status'], $row['price_sum']);
+                    $order = new Order($row['id'], $row['client_id'], $row['status'], $row['price_sum']);
                     $ret[] = $order;
                 }
                 return $ret;
@@ -48,16 +47,16 @@ class Order
             return false;
         }
     }
-    
+
     private $id;
-    private $userId;
+    private $clientId;
     private $status;
     private $priceSum;
 
-    public function __construct($newId, $newUserId, $newStatus, $newPriceSum)
+    public function __construct($newId, $newClientId, $newStatus, $newPriceSum)
     {
         $this->id = intval($newId);
-        $this->userId = intval($newUserId);
+        $this->clientId = intval($newClientId);
         $this->setStatus($newStatus);
         $this->setPriceSum($newPriceSum);
     }
@@ -87,10 +86,12 @@ class Order
         $this->status = $status;
     }
 
-    public function getUserId()
+    public function getClientId()
     {
-        return $this->userId;
+        return $this->clientId;
     }
+
+
 
 
 }

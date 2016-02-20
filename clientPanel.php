@@ -108,3 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </form>
 
+<?php
+
+
+$allClientOrders = $client->getAllMyOrders();
+//var_dump($allClientOrders);
+
+echo("<h2>Twoje zamówienia:</h2>");
+$length = count($allClientOrders);
+
+foreach($allClientOrders as $orderToShow){
+    echo("<h3>Zamówienie numer: " . $length . "</h3>");
+    echo("Status: " . $orderToShow->getStatus() . "</br>");
+    echo("Suma: " .$orderToShow->getPriceSum() . "</br>");
+    echo("<a href='orderSite.php?id={$orderToShow->getId()}'>Pokaż szczegóły</a>");
+    $length--;
+}

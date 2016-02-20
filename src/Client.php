@@ -1,15 +1,5 @@
 <?php
 
-/*
- CREATE TABLE Users(
-    id int AUTO_INCREMENT,
-    name varchar(255),
-    email varchar(255) UNIQUE,
-    password char(60),
-    description varchar(255),
-    PRIMARY KEY (id)
-);
- */
 
 class Client
 {
@@ -255,11 +245,10 @@ class Client
 
     public function createOrder()
     {
-        $sql = "INSERT INTO Orders(user_id, status, price_sum) VALUES($this->id, 0, 0)";
+        $sql = "INSERT INTO Orders(client_id, status, price_sum) VALUES($this->id, 0, 0)";
         $result = self::$connection->query($sql);
 
-        if($result == true)
-        {
+        if ($result == true) {
             $newOrder = new Order(self::$connection->insert_id, $this->id, 0, 0);
             return $newOrder;
         } else {
@@ -269,14 +258,14 @@ class Client
 
     public function getAllMyOrders()
     {
-        $sql = "SELECT * FROM Orders WHERE user_id = $this->id";
+        $sql = "SELECT * FROM Orders WHERE client_id = $this->id ORDER BY id DESC";
         $result = self::$connection->query($sql);
 
         if ($result == true) {
             $ret = [];
             if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()){
-                   $order = ''; //new Order();
+                while ($row = $result->fetch_assoc()) {
+                    $order = new Order($row['id'], $row['client_id'], $row['status'], $row['price_sum']);
                     $ret[] = $order;
                 }
             }

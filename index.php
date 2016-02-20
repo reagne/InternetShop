@@ -2,7 +2,7 @@
 
 require_once("./src/connection.php");
 
-if(!(isset($_SESSION['clientId'])) || !(isset($_SESSION['adminId']))) {
+if(!(isset($_SESSION['clientId']))) {
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $client = Client::LogInClient($_POST['email'], $_POST['password']);

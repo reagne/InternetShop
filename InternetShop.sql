@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 20 Lut 2016, 10:57
+-- Czas wygenerowania: 20 Lut 2016, 16:08
 -- Wersja serwera: 5.5.47-0ubuntu0.14.04.1
 -- Wersja PHP: 5.5.9-1ubuntu4.14
 
@@ -44,6 +44,54 @@ INSERT INTO `Admins` (`id`, `email`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `Categories`
+--
+
+CREATE TABLE IF NOT EXISTS `Categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Zrzut danych tabeli `Categories`
+--
+
+INSERT INTO `Categories` (`id`, `name`) VALUES
+(1, 'meble'),
+(2, 'ubrania');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Clients`
+--
+
+CREATE TABLE IF NOT EXISTS `Clients` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  `password` varchar(70) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  `address` varchar(150) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Zrzut danych tabeli `Clients`
+--
+
+INSERT INTO `Clients` (`id`, `first_name`, `last_name`, `email`, `password`, `address`) VALUES
+(1, 'Ewelina', 'Kozio³', 'ew@wp.pl', '$2y$11$qOz.XBZ6UODRtRegnpwzsOjnhL/NZNSeTSXcFkWVFCK05fbdLOoFy', 'ul. Jagienki 6\r\n67-100 Nowa Sól'),
+(2, 'Anna', 'Wezyr', 'anna@gmail.pl', '$2y$11$4uRtnef8OogqtdiLrTMiL.rjB4JgyEsEFVFFM6mSVi61F8Yr0t/Fi', 'ul. Sosnowa 23\r\n67-100 Nowa Sól'),
+(3, 'Andrzej', 'Koala', 'andrzej@wp.pl', '$2y$11$BTDLr2J8MOzz7RApSPZ4D.BIgwwZ6YDGTH1iq0P/hLGt0fyf6D0XS', 'ul. Opolska 2\r\n34-100 O³awa'),
+(4, 'Sara', 'Omo', 'sara@wp.pl', '$2y$11$RtHl7J8iGt6EfvTv79K.E.Uv.3Qh/4USu//L5l.qIjOjfk7px8s9O', 'ul. Wezuwia 4\r\n56-187 Oleszna');
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `Images`
 --
 
@@ -63,12 +111,20 @@ CREATE TABLE IF NOT EXISTS `Images` (
 
 CREATE TABLE IF NOT EXISTS `Orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
   `status` int(11) DEFAULT NULL,
   `price_sum` double DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  KEY `client_id` (`client_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Zrzut danych tabeli `Orders`
+--
+
+INSERT INTO `Orders` (`id`, `client_id`, `status`, `price_sum`) VALUES
+(1, 1, 0, 0),
+(2, 2, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -81,9 +137,17 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   `price` double NOT NULL,
   `description` varchar(1000) CHARACTER SET utf8 COLLATE utf8_polish_ci DEFAULT NULL,
-  `category` varchar(70) CHARACTER SET utf8 COLLATE utf8_polish_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `category` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `Products_ibfk_1` (`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Zrzut danych tabeli `Products`
+--
+
+INSERT INTO `Products` (`id`, `name`, `price`, `description`, `category`) VALUES
+(1, 'łóżko', 1289, 'drewniane, mocne', 1);
 
 -- --------------------------------------------------------
 
@@ -102,32 +166,6 @@ CREATE TABLE IF NOT EXISTS `Products_Orders` (
   KEY `order_id` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `Users`
---
-
-CREATE TABLE IF NOT EXISTS `Users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  `last_name` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  `password` varchar(70) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  `address` varchar(150) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Zrzut danych tabeli `Users`
---
-
-INSERT INTO `Users` (`id`, `first_name`, `last_name`, `email`, `password`, `address`) VALUES
-(1, 'Ela', 'Nowik', 'ela@wp.pl', '$2y$11$zAv5FSXNFG4h5dPe4EZhOOxgf2d32Q/PwKHaz8QA09XKeat11lRiO', 'ul. Jagienki 6\r\n45-300 Kraków'),
-(2, 'Anna', 'Wezyr', 'anna@gmail.pl', '$2y$11$4uRtnef8OogqtdiLrTMiL.rjB4JgyEsEFVFFM6mSVi61F8Yr0t/Fi', 'ul. Sosnowa 23\r\n67-100 Nowa Sól'),
-(3, 'Andrzej', 'Koala', 'andrzej@wp.pl', '$2y$11$BTDLr2J8MOzz7RApSPZ4D.BIgwwZ6YDGTH1iq0P/hLGt0fyf6D0XS', 'ul. Opolska 2\r\n34-100 O³awa');
-
 --
 -- Ograniczenia dla zrzutów tabel
 --
@@ -142,7 +180,13 @@ ALTER TABLE `Images`
 -- Ograniczenia dla tabeli `Orders`
 --
 ALTER TABLE `Orders`
-  ADD CONSTRAINT `Orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `Orders_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `Clients` (`id`) ON DELETE CASCADE;
+
+--
+-- Ograniczenia dla tabeli `Products`
+--
+ALTER TABLE `Products`
+  ADD CONSTRAINT `Products_ibfk_1` FOREIGN KEY (`category`) REFERENCES `Categories` (`id`);
 
 --
 -- Ograniczenia dla tabeli `Products_Orders`
