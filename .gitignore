@@ -1,6 +1,8 @@
 .idea
-./test
-/test
+
+test/composer.phar
+test/composer.lock
+test/vendor
 ./src/config.php
 
 
