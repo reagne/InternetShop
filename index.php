@@ -2,13 +2,13 @@
 
 require_once("./src/connection.php");
 
-if(!(isset($_SESSION['userId'])) || !(isset($_SESSION['adminId']))) {
+if(!(isset($_SESSION['clientId'])) || !(isset($_SESSION['adminId']))) {
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $user = User::LogInUser($_POST['email'], $_POST['password']);
+        $client = Client::LogInClient($_POST['email'], $_POST['password']);
 
-        if ($user !== FALSE) {
-            $_SESSION['userId'] = $user->getId();
+        if ($client !== FALSE) {
+            $_SESSION['clientId'] = $client->getId();
             header("Location: index.php");
         } else {
             $admin = Admin::LogInAdmin($_POST['email'], $_POST['password']);

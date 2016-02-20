@@ -3,11 +3,11 @@
 require_once("./src/connection.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //zabezpieczyć żeby rzeczy nie były puste w środku metody register user. !!
-    $user = User::RegisterUser($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password1'], $_POST['password2'], $_POST['address']);
+    //zabezpieczyć żeby rzeczy nie były puste w środku metody register client. !!
+    $client = Client::RegisterClient($_POST['firstName'], $_POST['lastName'], $_POST['email'], $_POST['password1'], $_POST['password2'], $_POST['address']);
 
-    if ($user !== FALSE) {
-        //$_SESSION['userId'] = $user->getId();
+    if ($client !== FALSE) {
+        //$_SESSION['clientId'] = $client->getId();
         //nie tworzy nam od razu sesji tylko nadal trzeba się zalogować. jak ma być?
         //jeszcze może być header po rejestracji na główną wyrzucać jak poprawne dane rejestracji były
         echo("Rejestracja udana. Możesz się zalogować");

@@ -1,5 +1,6 @@
 .idea
-
+./test
+/test
 ./src/config.php
 
 

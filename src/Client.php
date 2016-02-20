@@ -11,16 +11,16 @@
 );
  */
 
-class User
+class Client
 {
     static private $connection = null;
 
     static public function SetConnection(mysqli $newConnection)
     {
-        User::$connection = $newConnection;
+        Client::$connection = $newConnection;
     }
 
-    static public function RegisterUser($newFirstName, $newLastName, $newEmail, $password1, $password2, $newAddress)
+    static public function RegisterClient($newFirstName, $newLastName, $newEmail, $password1, $password2, $newAddress)
     {
         if ($password1 !== $password2) {
             return false;
@@ -32,19 +32,19 @@ class User
         ];
         $hashedPassword = password_hash($password1, PASSWORD_BCRYPT, $options);
 
-        $sql = "INSERT INTO Users(first_name, last_name, email, password, address) VALUES ('$newFirstName', '$newLastName', '$newEmail', '$hashedPassword', '$newAddress')";
+        $sql = "INSERT INTO Clients(first_name, last_name, email, password, address) VALUES ('$newFirstName', '$newLastName', '$newEmail', '$hashedPassword', '$newAddress')";
 
         $result = self::$connection->query($sql);
         if ($result == TRUE) {
-            $newUser = new User(self::$connection->insert_id, $newFirstName, $newLastName, $newEmail, $newAddress);
-            return $newUser;
+            $newClient = new Client(self::$connection->insert_id, $newFirstName, $newLastName, $newEmail, $newAddress);
+            return $newClient;
         }
         return false;
     }
 
-    static public function LogInUser($email, $password)
+    static public function LogInClient($email, $password)
     {
-        $sql = "SELECT * FROM Users WHERE email LIKE '$email'";
+        $sql = "SELECT * FROM Clients WHERE email LIKE '$email'";
         $result = self::$connection->query($sql);
 
         if ($result !== FALSE) {
@@ -53,41 +53,41 @@ class User
                 $isPasswordOK = password_verify($password, $row['password']);
 
                 if ($isPasswordOK === TRUE) {
-                    $user = new User($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
-                    return $user;
+                    $client = new Client($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
+                    return $client;
                 }
             }
         }
         return false;
     }
 
-    static public function GetUserById($idToLoad)
+    static public function GetClientById($idToLoad)
     {
-        $sql = "SELECT * FROM Users where id = $idToLoad";
+        $sql = "SELECT * FROM Clients where id = $idToLoad";
         $result = self::$connection->query($sql);
 
         if ($result !== FALSE) {
             if ($result->num_rows === 1) {
                 $row = $result->fetch_assoc();
-                $user = new User($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
-                return $user;
+                $client = new Client($row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['address']);
+                return $client;
 
             }
         }
         return false;
     }
 
-    static public function GetAllUsers()
+    static public function GetAllClients()
     {
         $ret = [];
-        $sql = "SELECT * FROM Users";
+        $sql = "SELECT * FROM Clients";
         $result = self::$connection->query($sql);
 
         if ($result !== FALSE) {
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $user = new User($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
-                    $ret[] = $user;
+                    $client = new Client($row['id'], $row['firstName'], $row['lastName'], $row['email'], $row['address']);
+                    $ret[] = $client;
                 }
             }
         }
@@ -146,7 +146,7 @@ class User
     public function changePassword($oldPassword, $newPassword1, $newPassword2)
     {
 
-        $sql = "SELECT * FROM Users WHERE id=$this->id";
+        $sql = "SELECT * FROM Clients WHERE id=$this->id";
         $result = self::$connection->query($sql);
 
         if ($result !== FALSE) {
@@ -167,7 +167,7 @@ class User
 
                     $hashedPassword = password_hash($newPassword1, PASSWORD_BCRYPT, $options);
 
-                    $sql2 = "UPDATE Users SET password='$hashedPassword' WHERE id=$this->id";
+                    $sql2 = "UPDATE Clients SET password='$hashedPassword' WHERE id=$this->id";
                     $result = self::$connection->query($sql2);
 
                     if ($result == true) {
