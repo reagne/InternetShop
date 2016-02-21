@@ -124,13 +124,19 @@ class Product
     {
         $this->active = $newActive;
     }
-    // Metoda umożliwiająca zaktualizowanie produktu Adminowi
-    public function updateProductInfo($newName, $newPrice, $newDescription, $newCategory)
+
+    public function updateProductInfo($newName, $newPrice, $newDescription, $newCategory, $newActive)
     {
-        $sql = "UPDATE Products SET name='$newName', price='$newPrice', description='$newDescription', category='$newCategory' WHERE id = $this->id";
+        $this->active = intval($newActive);
+        $this->setName($newName);
+        $this->setPrice($newPrice);
+        $this->setDescription($newDescription);
+        $this->category = intval($newCategory);
+
+        $sql = "UPDATE Products SET active = $this->active, name = '$this->name', description = '$this->description', category = $this->category, price = $this->price WHERE id = $this->id";
         $result = self::$connection->query($sql);
 
-        if($result !== FALSE) {
+        if($result == true) {
             return true;
         } else {
             return false;

@@ -11,6 +11,24 @@ if (isset($_SESSION['adminId'])) {
         $category = $_POST['newCategory'];
     }
 
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id = intval($_POST['id']);
+    $name = $_POST['newName'];
+    $price = $_POST['newPrice'];
+    $description = $_POST['newDescription'];
+    $active = intval($_POST['newActive']);
+    $category = intval(['newCategory']);
+
+    $product = Product::GetProductById($id);
+
+    if($product->updateProductInfo($name, $price, $description, $category, $active)) {
+        header("Location: productsPanel.php?show=$category");
+    } else {
+        echo("Nie udało się edytować produktu.");
+    }
+    
+}
+
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
         $product = Product::GetProductById($id);
