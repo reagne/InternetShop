@@ -288,6 +288,26 @@ class Client
         }
     }
 
+    public function getBasket()
+    {
+        $sql = "SELECT Products_Orders.id, Products_Orders.product_id, Products_Orders.order_id, Products_Orders.product_quantity, Products_Orders.product_price  FROM Products_Orders JOIN Orders ON Products_Orders.order_id = Orders.id WHERE Orders.client_id = $this->id AND Orders.status = 0 ORDER BY Products_Orders.id DESC";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            $ret = [];
+            if($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                    $po = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity']);
+                    $ret[] = $po;
+                }
+            }
+
+            return $ret;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 

@@ -9,13 +9,19 @@ class Products_Order
         Products_Order::$connection = $newConnection;
     }
 
-    static public function getPOById($id)
+    static public function GetPOById($id)
     {
         $sql = "SELECT * FROM Products_Orders WHERE id = $id";
         $result = self::$connection->query($sql);
 
-        if($result == true) {
-            //@TODO: after creating constructor
+        if ($result == true) {
+           if($result->num_rows == 1) {
+               $row = $result->fetch_assoc();
+
+               $details = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity']);
+               var_dump($details);
+               return $details;
+           }
         } else {
             return false;
         }
@@ -68,7 +74,31 @@ class Products_Order
         $this->productQuantity = intval($productQuantity);
     }
 
+    public function saveQuantityToDB($newQuantity)
+    {
+        $sql = "UPDATE Products_Orders SET product_quantity = $newQuantity WHERE id = $this->id";
+        $result = self::$connection->query($sql);
 
+        if ($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public function removePO()
+    {
+        $sql = "DELETE FROM Products_Orders WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
 
 }

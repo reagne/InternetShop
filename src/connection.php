@@ -19,18 +19,19 @@ Products_Order::SetConnection($conn);
 
 
 if (isset($_SESSION['clientId'])) {
-    echo("<a href='index.php'>Strona główna</a>" . "  ");
-    echo("<a href='clientPanel.php'>Panel użytkownika</a>" . "  ");
-    echo("<a href='basket.php'>Koszyk</a>" . "  ");
-    echo("<a href='logout.php'>Wyloguj</a> <br>");
+    echo("<a href='./index.php'>Strona główna</a>" . "  ");
+    echo("<a href='./clientPanel.php'>Panel użytkownika</a>" . "  ");
+    echo("<a href='./basket.php'>Koszyk</a>" . "  ");
+    echo("<a href='./logout.php'>Wyloguj</a> <br>");
 } elseif (isset($_SESSION['adminId'])) {
-    echo("<a href='panel.php'>Panel administracyjny</a>" . "  ");
-    echo("<a href='clientsPanel.php'>Użytkownicy</a>" . " ");
-    echo("<a href='ordersPanel.php'>Zamówienia</a>" . " ");
-    echo("<a href='productsPanel.php'>Produkty</a>" . " ");
-    echo("<a href='logout.php'>Wyloguj</a><br>");
+    echo("<a href='./panel.php'>Panel administracyjny</a>" . "  ");
+    echo("<a href='./clientsPanel.php'>Użytkownicy</a>" . " ");
+    echo("<a href='./ordersPanel.php'>Zamówienia</a>" . " ");
+    echo("<a href='./productsPanel.php'>Produkty</a>" . " ");
+    echo("<a href='./logout.php'>Wyloguj</a><br>");
 
 }
+
 
 
 

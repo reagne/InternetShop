@@ -153,12 +153,39 @@ class Order
         $sql = "UPDATE Orders SET status = 2 WHERE id = $this->id";
         $result = self::$connection->query($sql);
 
+        $this->updatePriceSum();
+
         if($result == true) {
             return true;
         } else {
             return false;
         }
+    }
 
+    public function changeStatusToDo()
+    {
+        $sql = "UPDATE Orders SET status = 1 WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        $this->updatePriceSum();
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function removeOrder()
+    {
+        $sql = "DELETE FROM Orders WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
