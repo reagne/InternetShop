@@ -104,8 +104,9 @@ class Product
         $this->active = $newActive;
     }
 
-    public function updateProductInfo($newName, $newPrice, $newDescription)
+    public function updateProductInfo($newName, $newPrice, $newDescription, $newCategory, $newActive)
     {
+        
 
     }
 
@@ -117,6 +118,18 @@ class Product
     public function changeProductActive($newActive)
     {
 
+    }
+
+    public function removeProduct()
+    {
+        $sql = "UPDATE Products SET active = 0 WHERE id = $this->id";
+        $result = self::$connection->query($sql);
+
+        if($result == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

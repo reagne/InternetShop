@@ -19,12 +19,11 @@ if(isset($_GET['show'])) {
 
     echo("<h1>" . ucfirst($categoryName) ."</h1>");
 
-    echo("<table <tr><td>Id</td><td>Nazwa</td><td>Cena</td><td>Opis</td><td>Dostępność</td><td>Edytuj</td><td>Usuń</td></tr>");
+    echo("<table <tr><td>Id</td><td>Nazwa</td><td>Cena</td><td>Opis</td><td>Dostępność</td><td>Edytuj</td><td>Dezaktywuj</td></tr>");
 
     foreach ($allProducts as $productToShow) {
 
         $productId = $productToShow->getId();
-        var_dump($productToShow);
 
         echo("<tr>");
         echo("<td>" . $productId . "</td>");
@@ -33,8 +32,8 @@ if(isset($_GET['show'])) {
         echo("<td>" . $productToShow->getDescription() . "</td>");
         echo("<td>" . $productToShow->getActive() . "</td>");
 
-        echo("<td> <a href='categoriesPanel.php?show=$categoryId'>Edytuj</a></td>");
-        echo("<td> <a href='categoriesPanel.php?id=$categoryId'>Usuń</a></td></tr>");
+        echo("<td> <a href='showProduct.php?id=$productId'>Edytuj</a></td>");
+        echo("<td> <a href='showProduct.php?remove=$productId'>Dezaktywuj</a></td></tr>");
 
     }
 
