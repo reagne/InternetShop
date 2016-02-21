@@ -33,7 +33,8 @@ if(isset($_GET['show'])) {
         echo("<td>" . $productToShow->getActive() . "</td>");
 
         echo("<td> <a href='showProduct.php?id=$productId'>Edytuj</a></td>");
-        echo("<td> <a href='showProduct.php?remove=$productId'>Dezaktywuj</a></td></tr>");
+        echo("<td> <a href='showProduct.php?remove=$productId'>Dezaktywuj</a></td>");
+        echo("<td> <a href='showProduct.php?addImage=$productId'>Dodaj obrazek</a></td></tr>");
 
     }
 

@@ -26,17 +26,14 @@ class Category
         $sql = "SELECT * FROM Categories WHERE id = $categoryId";
         $result = self::$connection->query($sql);
 
-        if ($result == true) {
+        if ($result !== FALSE) {
             if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
                 $category = new Category($row['id'], $row['name']);
                 return $category;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     static public function GetAllCategories()
@@ -44,20 +41,17 @@ class Category
         $sql = "SELECT * FROM Categories ORDER BY id ASC";
         $result = self::$connection->query($sql);
 
-        if($result == true) {
+        if($result !== FALSE) {
             if($result->num_rows > 0) {
                 $ret = [];
-                while($row = $result->fetch_assoc()) {
+                while ($row = $result->fetch_assoc()) {
                     $category = new Category($row['id'], $row['name']);
                     $ret[] = $category;
                 }
                 return $ret;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     static public function GetAllFromCategory($categoryId)
@@ -65,23 +59,18 @@ class Category
         $sql = "SELECT * FROM Products WHERE category = $categoryId ORDER BY id ASC";
         $result = self::$connection->query($sql);
 
-        if($result == true) {
-            if($result->num_rows > 0) {
+        if($result !== FALSE) {
+            if ($result->num_rows > 0) {
                 $ret = [];
-                while($row = $result->fetch_assoc()) {
+                while ($row = $result->fetch_assoc()) {
                     $category = new Product($row['id'], $row['name'], $row['price'], $row['description'], $row['category'], $row['active']);
                     $ret[] = $category;
                 }
                 return $ret;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
-
-
 
     private $id;
     private $name;
