@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 20 Lut 2016, 22:19
+-- Czas wygenerowania: 21 Lut 2016, 18:42
 -- Wersja serwera: 5.5.47-0ubuntu0.14.04.1
 -- Wersja PHP: 5.5.9-1ubuntu4.14
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `Categories` (
   `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Zrzut danych tabeli `Categories`
@@ -61,6 +61,8 @@ CREATE TABLE IF NOT EXISTS `Categories` (
 
 INSERT INTO `Categories` (`id`, `name`) VALUES
 (1, 'meble'),
+(3, 'plecaki'),
+(4, 'torby'),
 (2, 'ubrania');
 
 -- --------------------------------------------------------
@@ -116,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `Orders` (
   `price_sum` double DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `client_id` (`client_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
 
 --
 -- Zrzut danych tabeli `Orders`
@@ -125,7 +127,8 @@ CREATE TABLE IF NOT EXISTS `Orders` (
 INSERT INTO `Orders` (`id`, `client_id`, `status`, `price_sum`) VALUES
 (1, 1, 2, 4034.98),
 (14, 1, 3, 0),
-(15, 3, 3, NULL);
+(15, 3, 3, NULL),
+(17, 1, 2, 5827.92);
 
 -- --------------------------------------------------------
 
@@ -139,17 +142,21 @@ CREATE TABLE IF NOT EXISTS `Products` (
   `price` double NOT NULL,
   `description` varchar(1000) CHARACTER SET utf8 COLLATE utf8_polish_ci DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
+  `active` int(5) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `Products_ibfk_1` (`category`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Zrzut danych tabeli `Products`
 --
 
-INSERT INTO `Products` (`id`, `name`, `price`, `description`, `category`) VALUES
-(1, 'łóżko', 1289, 'drewniane, mocne', 1),
-(2, 'sofa', 1456.98, 'rozkładana sofa', 1);
+INSERT INTO `Products` (`id`, `name`, `price`, `description`, `category`, `active`) VALUES
+(1, 'łóżko', 1289, 'drewniane, mocne', 1, 1),
+(2, 'sofa', 1456.98, 'rozkładana sofa', 1, 0),
+(3, 'test', 123, 'jgjgj', 1, 0),
+(4, 'test1', 12, 'testtt', 2, 1),
+(5, 'bia?a', 2, 'kredka', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -163,19 +170,19 @@ CREATE TABLE IF NOT EXISTS `Products_Orders` (
   `order_id` int(11) NOT NULL,
   `product_quantity` int(11) NOT NULL,
   `product_price` double NOT NULL,
-  `c` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Zrzut danych tabeli `Products_Orders`
 --
 
-INSERT INTO `Products_Orders` (`id`, `product_id`, `order_id`, `product_quantity`, `product_price`, `c`) VALUES
-(1, 1, 1, 2, 0, 0),
-(2, 2, 1, 1, 0, 0);
+INSERT INTO `Products_Orders` (`id`, `product_id`, `order_id`, `product_quantity`, `product_price`) VALUES
+(1, 1, 1, 3, 0),
+(2, 2, 1, 2, 0),
+(4, 2, 17, 4, 0);
 
 --
 -- Ograniczenia dla zrzutów tabel
