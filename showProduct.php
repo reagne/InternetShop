@@ -3,46 +3,37 @@
 require_once("./src/connection.php");
 
 if (isset($_SESSION['adminId'])) {
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $id = intval($_POST['id']);
         $name = $_POST['newName'];
         $price = $_POST['newPrice'];
         $description = $_POST['newDescription'];
-        $active = $_POST['newActive'];
-        $category = $_POST['newCategory'];
+        $active = intval($_POST['newActive']);
+        $category = intval(['newCategory']);
+
+        $product = Product::GetProductById($id);
+
+        if ($product->updateProductInfo($name, $price, $description, $category, $active)) {
+            header("Location: productsPanel.php?show=$category");
+        } else {
+            echo("Nie udało się edytować produktu.");
+        }
     }
-
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = intval($_POST['id']);
-    $name = $_POST['newName'];
-    $price = $_POST['newPrice'];
-    $description = $_POST['newDescription'];
-    $active = intval($_POST['newActive']);
-    $category = intval(['newCategory']);
-
-    $product = Product::GetProductById($id);
-
-    if($product->updateProductInfo($name, $price, $description, $category, $active)) {
-        header("Location: productsPanel.php?show=$category");
-    } else {
-        echo("Nie udało się edytować produktu.");
-    }
-    
-}
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
         $product = Product::GetProductById($id);
 
         echo("
-    <form method='post'>
+        <form method='post'>
         <p><label>Nazwa: <input type='text' name='newName' value='{$product->getName()}'></label></p>
         <p><label>Cena: <input type='text' name='newPrice' value='{$product->getPrice()}'></label></p>
         <p><label>Opis: <textarea name='newDescription'>{$product->getDescription()}</textarea>></label></p>
         <p><label>Dostępność:<input type='text' name='newActive' value='{$product->getActive()}'></label></p>
         <p><label>Kategoria: <input type='text' name='newCategory' value='{$product->getCategory()}'></label></p>
         <input type='submit' value='Edytuj'>
-    </form>
-    ");
+        </form>
+        ");
     } elseif (isset($_GET['remove'])) {
         $id = intval($_GET['remove']);
         var_dump($id);
@@ -54,9 +45,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo("Nie udało się dezaktywować produktu");
         }
-    } elseif (isset($_GET['addImage'])){
+    } elseif (isset($_GET['addImage'])) {
         $product_id = intval($_GET['addImage']);
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $filesName = $_FILES['upload']['name'];
             $newImage = ProductImage::AddNewImage($product_id, $filesName);
         }
