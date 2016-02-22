@@ -8,6 +8,7 @@ require_once(dirname(__FILE__) . "/Admin.php");
 require_once(dirname(__FILE__) . "/Order.php");
 require_once(dirname(__FILE__) . "/Products_Order.php");
 require_once(dirname(__FILE__) . "/Category.php");
+require_once(dirname(__FILE__) . "/ProductImage.php");
 
 
 $conn = new mysqli($dbHost, $dbUser, $dbPassword, $dbBaseName);
@@ -18,6 +19,7 @@ Admin::SetConnection($conn);
 Order::SetConnection($conn);
 Products_Order::SetConnection($conn);
 Category::SetConnection($conn);
+ProductImage::SetConnection($conn);
 
 
 if (isset($_SESSION['clientId'])) {
@@ -25,6 +27,14 @@ if (isset($_SESSION['clientId'])) {
     echo("<a href='./clientPanel.php'>Panel użytkownika</a>" . "  ");
     echo("<a href='./basket.php'>Koszyk</a>" . "  ");
     echo("<a href='./logout.php'>Wyloguj</a> <br>");
+    $categories = Category::GetAllCategories();
+    echo("KATEGORIE: <a href='showProduct.php?category=all'>wszystkie</a>  | ");
+    foreach($categories as $category) {
+        echo("
+    <a href='showProduct.php?category={$category->getName()}'>{$category->getName()}</a> |
+    ");
+    }
+    echo("<a href='showProduct.php?category=other'>inne</a><br>");
 } elseif (isset($_SESSION['adminId'])) {
     echo("<a href='./panel.php'>Panel administracyjny</a>" . "  ");
     echo("<a href='./clientsPanel.php'>Użytkownicy</a>" . " ");

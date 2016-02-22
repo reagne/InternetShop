@@ -3,13 +3,20 @@
 require_once("./src/connection.php");
 
 if(!(isset($_SESSION['clientId'])) && !(isset($_SESSION['adminId']))):
+    $categories = Category::GetAllCategories();
+    echo("KATEGORIE: <a href='showProduct.php?category=all'>wszystkie</a>  | ");
+    foreach($categories as $category) {
+        echo("
+    <a href='showProduct.php?category={$category->getName()}'>{$category->getName()}</a> |
+    ");
+    }
+    echo("<a href='showProduct.php?category=other'>inne</a><br>");
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $client = Client::LogInClient($_POST['email'], $_POST['password']);
 
         if ($client !== FALSE) {
             $_SESSION['clientId'] = $client->getId();
-            header("Location: index.php");
         } else {
             $admin = Admin::LogInAdmin($_POST['email'], $_POST['password']);
             if ($admin != FALSE) {
@@ -50,6 +57,7 @@ if(!(isset($_SESSION['clientId'])) && !(isset($_SESSION['adminId']))):
 
     <?php
 endif;
+
 
     echo("Menu kategorii produktów i karuzela w connection menu. jeśli istnieje sesja to jeszcze opcja wylogowania");
 
