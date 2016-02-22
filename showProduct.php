@@ -3,66 +3,68 @@
 require_once("./src/connection.php");
 
 if (isset($_SESSION['adminId'])) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $id = intval($_POST['id']);
-        $name = $_POST['newName'];
-        $price = $_POST['newPrice'];
-        $description = $_POST['newDescription'];
-        $active = intval($_POST['newActive']);
-        $category = intval(['newCategory']);
+    if (!(isset($_GET['addImage']))) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id = intval($_POST['id']);
+            $name = $_POST['newName'];
+            $price = $_POST['newPrice'];
+            $description = $_POST['newDescription'];
+            $active = intval($_POST['newActive']);
+            $category = intval(['newCategory']);
 
+            $product = Product::GetProductById($id);
+
+            if ($product->updateProductInfo($name, $price, $description, $category, $active)) {
+                header("Location: productsPanel.php?show=$category");
+            } else {
+                echo("Nie udało się edytować produktu.");
+            }
+        }
+
+        /*
+        $id = $_GET['id'];
         $product = Product::GetProductById($id);
 
-        if ($product->updateProductInfo($name, $price, $description, $category, $active)) {
-            header("Location: productsPanel.php?show=$category");
-        } else {
-            echo("Nie udało się edytować produktu.");
-        }
+        echo("
+        <form action='showProduct.php' method='post'>
+        <p>
+        <label>Id (nie podlega edycji)
+        <input type='text' name='id' value='{$product->getId()}'</label>
+    </p>
+        <p>
+        <label>
+        Nazwa:
+        <input type='text' name='newName' value='{$product->getName()}'>
+    </label>
+    </p>
+    <p>
+        <label>
+        Cena:
+        <input type='text' name='newPrice' value='{$product->getPrice()}'>
+    </label>
+    </p>
+    <p>
+        <label>
+        Opis
+        <textarea name='newDescription'>{$product->getDescription()}</textarea>>
+    </label>
+    </p>
+    <p>
+        <label>
+        Dostępność:
+        <input type='text' name='newActive' value='{$product->getActive()}'>
+    </label>
+    </p>
+    <p>
+        <label>
+        Kategoria
+        <input type='text' name='newCategory' value='{$product->getCategory()}'>
+    </label>
+    </p>
+    <input type='submit' value='Edytuj'>
+    </form>");
+    */
     }
-
-    /*
-    $id = $_GET['id'];
-    $product = Product::GetProductById($id);
-
-    echo("
-    <form action='showProduct.php' method='post'>
-    <p>
-    <label>Id (nie podlega edycji)
-    <input type='text' name='id' value='{$product->getId()}'</label>
-</p>
-    <p>
-    <label>
-    Nazwa:
-    <input type='text' name='newName' value='{$product->getName()}'>
-</label>
-</p>
-<p>
-    <label>
-    Cena:
-    <input type='text' name='newPrice' value='{$product->getPrice()}'>
-</label>
-</p>
-<p>
-    <label>
-    Opis
-    <textarea name='newDescription'>{$product->getDescription()}</textarea>>
-</label>
-</p>
-<p>
-    <label>
-    Dostępność:
-    <input type='text' name='newActive' value='{$product->getActive()}'>
-</label>
-</p>
-<p>
-    <label>
-    Kategoria
-    <input type='text' name='newCategory' value='{$product->getCategory()}'>
-</label>
-</p>
-<input type='submit' value='Edytuj'>
-</form>");
-*/
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -70,6 +72,7 @@ if (isset($_SESSION['adminId'])) {
 
         echo("
         <form method='post'>
+        <p><label>Id (nie podlega edycji)<input type='text' name='id' value='{$product->getId()}'</label></p>
         <p><label>Nazwa: <input type='text' name='newName' value='{$product->getName()}'></label></p>
         <p><label>Cena: <input type='text' name='newPrice' value='{$product->getPrice()}'></label></p>
         <p><label>Opis: <textarea name='newDescription'>{$product->getDescription()}</textarea>></label></p>
@@ -93,7 +96,19 @@ if (isset($_SESSION['adminId'])) {
         $product_id = intval($_GET['addImage']);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $filesName = $_FILES['upload']['name'];
-            $newImage = ProductImage::AddNewImage($product_id, $filesName);
+            $uploaddir = dirname(__FILE__);
+            $uploadfile = $uploaddir. '/src/images/' . basename($_FILES['upload']['name']);
+            if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)){
+
+                echo "File is valid, and was successfully uploaded.\n";
+
+            } else {
+
+                echo "Possible file upload attack!\n";
+            }
+            var_dump($uploadfile);
+
+            $newImage = ProductImage::AddNewImage($product_id, $uploadfile);
         }
         echo("
         <form method='post' enctype='multipart/form-data'>
@@ -156,3 +171,5 @@ if (isset($_SESSION['adminId'])) {
         echo("</table>");
     }
 }
+
+
