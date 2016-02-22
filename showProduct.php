@@ -20,10 +20,7 @@ if (isset($_SESSION['adminId'])) {
         }
     }
 
-
-}
-
-if (isset($_GET['id'])) {
+    /*
     $id = $_GET['id'];
     $product = Product::GetProductById($id);
 
@@ -65,7 +62,7 @@ if (isset($_GET['id'])) {
 </p>
 <input type='submit' value='Edytuj'>
 </form>");
-
+*/
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
@@ -106,49 +103,56 @@ if (isset($_GET['id'])) {
         ");
     }
 } else {
-    if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $category = $_GET['category'];
-        if($category == "all"){
+        echo("<table><tr><td>Nazwa</td><td>Cena</td><td>Dostępność</td><td>Opis</td><td>Zobacz</td></tr>");
+        if ($category == "all") {
+            echo("<h1>Wszystkie produkty</h1>");
             $products = Product::GetAllProducts();
-            foreach ($products as $product){
-                if($product->getActive() == 1){
+            foreach ($products as $product) {
+                if ($product->getActive() == 1) {
                     $avaible = "Tak";
                 } else {
                     $avaible = "Nie";
                 }
-                echo ("
-                Nazwa: {$product->getName()} | Cena {$product->getPrice()} | Produkt dostępny: $avaible | Opis: {$product->getDescription()} | <a href='productsite.php?id={$product->getId()}'>Zobacz</a> <br>
+                echo("<tr>
+                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
                 ");
             }
-        } elseif ($category == "other"){
+        } elseif ($category == "other") {
             $products = Product::getAllWithoutCategory();
-            foreach ($products as $product){
-                if($product->getActive() == 1){
+            echo("<h1>Inne</h1>");
+            foreach ($products as $product) {
+                if ($product->getActive() == 1) {
                     $avaible = "Tak";
                 } else {
                     $avaible = "Nie";
                 }
-                echo ("
-                Nazwa: {$product->getName()} | Cena {$product->getPrice()} | Produkt dostępny: $avaible | Opis: {$product->getDescription()} | <a href='productsite.php?id={$product->getId()}'>Zobacz</a> <br>
+                echo("
+                <tr>
+                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
                 ");
             }
         } else {
             $categories = Category::GetAllCategories();
-            foreach($categories as $cat) {
-                if($category == $cat->getName()){
+            foreach ($categories as $cat) {
+                if ($category == $cat->getName()) {
+                    echo("<h1>" . ucfirst($cat->getName()) . "</h1>");
                     $products = Category::GetAllFromCategory($cat->getId());
-                    foreach ($products as $product){
-                        if($product->getActive() == 1){
+                    foreach ($products as $product) {
+                        if ($product->getActive() == 1) {
                             $avaible = "Tak";
                         } else {
                             $avaible = "Nie";
                         }
-                        echo ("
-                        Nazwa: {$product->getName()} | Cena {$product->getPrice()} | Produkt dostępny: $avaible | Opis: {$product->getDescription()} | <a href='productsite.php?id={$product->getId()}'>Zobacz</a> <br>
+                        echo("
+                        <tr>
+                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
                         ");
                     }
                 }
             }
         }
+        echo("</table>");
     }
 }
