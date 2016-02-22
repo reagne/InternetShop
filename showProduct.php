@@ -22,7 +22,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo("Nie udało się edytować produktu.");
     }
-    
+
 }
 
 if (isset($_GET['id'])) {
