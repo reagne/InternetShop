@@ -101,7 +101,7 @@ class Category
         $sql = "DELETE FROM Categories WHERE id = $this->id";
         $result = self::$connection->query($sql);
 
-        if($result == true) {
+        if($result !== FALSE) {
             return true;
         } else {
             return false;

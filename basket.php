@@ -79,8 +79,6 @@ if (isset($_GET['id'])) {
 if (isset($_GET['removeOrder']) && $_GET['removeOrder'] == 1) {
     $order->removeOrder();
     header("Location: basket.php");
-
-
 }
 
 echo("<a href='basket.php?removeOrder=1'>Wyczyść koszyk</a><br>");
