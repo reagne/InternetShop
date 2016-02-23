@@ -63,10 +63,16 @@ if ($clientId == $order->getClientId()) {
         echo("<a href='orderSite.php?id=$orderId'>Zapłać</a>");
 
 
-
     }
 
 }
+
+
+
+
+
+
+
 
 
 
