@@ -170,19 +170,4 @@ class Product
         }
         return false;
     }
-    // Pobieranie wszystkich obrazów dla konkretnego produktu
-    public function getAllImages($productId){
-        $sql = "SELECT * FROM Images WHERE product_id = $productId";
-        $result = self::$connection->query($sql);
-
-        if ($result !== FALSE) {
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $images = new Image($row['id'], $row['product_id'], $row['path_to_file']);
-                return $images;
-            }
-        }
-        return false;
-    }
-
 }

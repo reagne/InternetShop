@@ -10,15 +10,14 @@ class ProductImage
     // Dodawanie obrazka do produktu
     static public function AddNewImage($product_id, $filePath)
     {
-        $sql = "INSERT INTO Images(product_id, path_to_file) VALUES($product_id, '$filePath')";
+        $sql = "INSERT INTO Images(product_id, path_to_file) VALUES('$product_id', '$filePath')";
         $result = self::$connection->query($sql);
 
-        if ($result != FALSE) {
+        if ($result !== FALSE) {
             return true;
         }
         return false;
     }
-
     static public function GetImageById($imageId)
     {
         $sql = "SELECT * FROM Images WHERE id = $imageId";
@@ -30,6 +29,23 @@ class ProductImage
                 $image = new ProductImage($row['id'], $row['product_id'], $row['path_to_file']);
                 return $image;
             }
+        }
+        return false;
+    }
+    static public function GetImagesByProductId($productId)
+    {
+        $sql = "SELECT * FROM Images WHERE product_id = $productId";
+        $result = self::$connection->query($sql);
+
+        $ret = [];
+        if ($result !== FALSE) {
+            if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()){
+                    $image = new ProductImage($row['id'], $row['product_id'], $row['path_to_file']);
+                    $ret[] = $image;
+                }
+            }
+            return $ret;
         }
         return false;
     }
@@ -64,7 +80,4 @@ class ProductImage
     {
         $this->path = $newPath;
     }
-
-
-
 }

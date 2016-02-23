@@ -96,19 +96,14 @@ if (isset($_SESSION['adminId'])) {
         $product_id = intval($_GET['addImage']);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $filesName = $_FILES['upload']['name'];
-            $uploaddir = dirname(__FILE__);
-            $uploadfile = $uploaddir. '/src/images/' . basename($_FILES['upload']['name']);
+            $uploadfile = '/src/images/' . basename($product_id.'_'.$_FILES['upload']['name']);
             if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)){
-
                 echo "File is valid, and was successfully uploaded.\n";
-
             } else {
-
                 echo "Possible file upload attack!\n";
             }
             var_dump($uploadfile);
-
-            $newImage = ProductImage::AddNewImage($product_id, $uploadfile);
+            //$newImage = ProductImage::AddNewImage($product_id, $uploadfile);
         }
         echo("
         <form method='post' enctype='multipart/form-data'>
@@ -118,36 +113,59 @@ if (isset($_SESSION['adminId'])) {
         ");
     }
 } else {
+    // MENU KATEGORII dla niezalogowanych użytkowników
+    if(!isset($_SESSION['clientId'])) {
+        $categories = Category::GetAllCategories();
+        echo("KATEGORIE: <a href='showProduct.php?category=all'>wszystkie</a>  | ");
+        foreach ($categories as $category) {
+            echo("
+            <a href='showProduct.php?category={$category->getName()}'>{$category->getName()}</a> |
+            ");
+        }
+        echo("<a href='showProduct.php?category=other'>inne</a><br>");
+    }
+    // Wyświetlanie produktów z wybranej kategorii:
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $category = $_GET['category'];
+        // Nagłówek tabeli:
         echo("<table><tr><td>Nazwa</td><td>Cena</td><td>Dostępność</td><td>Opis</td><td>Zobacz</td></tr>");
+        //Kategoria wyświetlająca wszystkie produkty
         if ($category == "all") {
             echo("<h1>Wszystkie produkty</h1>");
             $products = Product::GetAllProducts();
             foreach ($products as $product) {
-                if ($product->getActive() == 1) {
+                if ($product->getActive()) {
                     $avaible = "Tak";
                 } else {
                     $avaible = "Nie";
                 }
                 echo("<tr>
-                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
-                ");
+                    <td>{$product->getName()}</td>
+                    <td>{$product->getPrice()} </td>
+                    <td>$avaible </td>
+                    <td>{$product->getDescription()}</td>
+                    <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+                </tr>");
             }
+        // Kategoria wyświetlająca produkty bez żadnej kategorii
         } elseif ($category == "other") {
             $products = Product::getAllWithoutCategory();
             echo("<h1>Inne</h1>");
             foreach ($products as $product) {
-                if ($product->getActive() == 1) {
+                if ($product->getActive()) {
                     $avaible = "Tak";
                 } else {
                     $avaible = "Nie";
                 }
-                echo("
-                <tr>
-                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
-                ");
+                echo("<tr>
+                <td>{$product->getName()}</td>
+                <td>{$product->getPrice()} </td>
+                <td>$avaible</td>
+                <td>{$product->getDescription()}</td>
+                <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+                </tr>");
             }
+        //Kategorie wprowadzone w bazie danych
         } else {
             $categories = Category::GetAllCategories();
             foreach ($categories as $cat) {
@@ -155,15 +173,18 @@ if (isset($_SESSION['adminId'])) {
                     echo("<h1>" . ucfirst($cat->getName()) . "</h1>");
                     $products = Category::GetAllFromCategory($cat->getId());
                     foreach ($products as $product) {
-                        if ($product->getActive() == 1) {
+                        if ($product->getActive()) {
                             $avaible = "Tak";
                         } else {
                             $avaible = "Nie";
                         }
-                        echo("
-                        <tr>
-                <td>{$product->getName()}</td><td>{$product->getPrice()} </td><td>$avaible </td><td>{$product->getDescription()}</td> <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td> </tr>
-                        ");
+                        echo("<tr>
+                        <td>{$product->getName()}</td>
+                        <td>{$product->getPrice()} </td>
+                        <td>$avaible </td>
+                        <td>{$product->getDescription()}</td>
+                        <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+                        </tr>");
                     }
                 }
             }

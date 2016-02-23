@@ -42,8 +42,8 @@ if (isset($_SESSION['clientId'])) {
     echo("<a href='./productsPanel.php'>Produkty</a>" . " ");
     echo("<a href='./categoriesPanel.php'>Kategorie</a>" . " ");
     echo("<a href='./logout.php'>Wyloguj</a><br>");
-
 }
+
 
 
 
