@@ -5,23 +5,20 @@ require_once("./src/connection.php");
 if (!isset($_SESSION['clientId']) && !isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
+require_once("./src/Header.php");
 
 $clientId = $_SESSION['clientId'];
-
 $client = Client::GetClientById($clientId);
-
-$orderId = $_GET['id'];
-
+$orderId = $_SESSION['orderId'];
 $order = Order::GetOrderById($orderId);
-
 
 if ($clientId == $order->getClientId()) {
 
     if ($order->getStatus() == 0 || $order->getStatus() == 1) {
 
         $order->changeStatusToDo();
-
-        echo("<h2>Suma: {$order->getPriceSum()}</h2>");
+        $price = Products_Order::GetSumPriceByOrderId($orderId);
+        echo("<h2>Suma: $price</h2>");
 
         echo("<h3>Dane do wysyłki: </h3>");
         $clientId = $order->getClientId();
@@ -56,17 +53,14 @@ if ($clientId == $order->getClientId()) {
 
         if (isset($_GET['removeOrder']) && $_GET['removeOrder'] == 1) {
             $order->removeOrder();
+            unset($_SESSION['orderId']);
             header("Location: basket.php");
         }
 
-
-        echo("<a href='orderSite.php?id=$orderId'>Zapłać</a>");
-
-
+        echo("<a href='orderSite.php'>Zapłać</a>");
     }
-
 }
-
+require_once("./src/Footer.php");
 
 
 

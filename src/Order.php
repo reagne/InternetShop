@@ -4,99 +4,81 @@ class Order
 {
     static private $connection = null;
 
-    static public function SetConnection(mysqli $newConnection)
-    {
+    static public function SetConnection(mysqli $newConnection){
         Order::$connection = $newConnection;
     }
 
-    static public function GetOrderById($orderId)
-    {
+    static public function GetOrderById($orderId){
         $sql = "SELECT * FROM Orders WHERE id = $orderId";
         $result = self::$connection->query($sql);
 
-        if ($result == true) {
+        if ($result !== FALSE) {
             if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
-                $order = new Order($row['id'], $row['client_id'], $row['status'], $row['price_sum']);
+                $order = new Order($row['id'], $row['client_id'], $row['status']);
                 return $order;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
-    static public function GetAllOrders()
-    {
+    static public function GetAllOrders(){
         $sql = "SELECT * FROM Orders";
         $result = self::$connection->query($sql);
 
-        if ($result == true) {
+        if ($result !== FALSE) {
             $ret = [];
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    $order = new Order($row['id'], $row['client_id'], $row['status'], $row['price_sum']);
+                    $order = new Order($row['id'], $row['client_id'], $row['status']);
                     $ret[] = $order;
                 }
                 return $ret;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    static public function CreateOrder($newClientId){
+        $sql = "INSERT INTO Orders(client_id, status) VALUES($newClientId, 0)";
+        $result = self::$connection->query($sql);
+        if ($result !== FALSE) {
+            $newOrder = new Order(self::$connection->insert_id, $newClientId, 0);
+            return $newOrder;
+        }
+        return false;
     }
 
     private $id;
     private $clientId;
     private $status;
-    private $priceSum;
 
-    public function __construct($newId, $newClientId, $newStatus, $newPriceSum)
-    {
+    public function __construct($newId, $newClientId, $newStatus){
         $this->id = intval($newId);
         $this->clientId = intval($newClientId);
         $this->setStatus($newStatus);
-        $this->setPriceSum($newPriceSum);
     }
 
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
-    public function getPriceSum()
-    {
-        return $this->priceSum;
-    }
-
-    public function setPriceSum($priceSum)
-    {
-        $this->priceSum = $priceSum;
-    }
-
-    public function getStatus()
-    {
+    public function getStatus(){
         return $this->status;
     }
 
-    public function setStatus($status)
-    {
+    public function setStatus($status){
         $this->status = $status;
     }
 
-    public function getClientId()
-    {
+    public function getClientId(){
         return $this->clientId;
     }
 
-    public function showAllOrder()
-    {
+    public function showAllOrder(){
         $sql = "SELECT * FROM Products_Orders WHERE Products_Orders.order_id = $this->id;";
         $result = self::$connection->query($sql);
-
-        if ($result == true) {
+        if ($result !== FALSE) {
             if ($result->num_rows > 0) {
                 $ret = [];
                 while ($row = $result->fetch_assoc()) {
@@ -106,88 +88,45 @@ class Order
                     //var_dump($details);
                 }
                 return $ret;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
-
-    }
-//zaaktualizowanie price_sum w bazie danych.
-    public function updatePriceSum()
-    {
-        $toUp = $this->showAllOrder();
-        $priceSum = 0;
-        foreach ($toUp as $toAdd) {
-            $product = Product::GetProductById($toAdd->getProductId());
-            $productPrice = $product->getPrice();
-            $quantity = $toAdd->getProductQuantity();
-            $priceSumPart = $quantity * $productPrice;
-            $priceSum += $priceSumPart;
-        }
-
-        $sql = "UPDATE Orders SET price_sum = $priceSum WHERE id = $this->id";
-        $result = self::$connection->query($sql);
-        if($result == TRUE) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
-    public function changeStatusToSent()
-    {
+    public function changeStatusToSent(){
         $sql = "UPDATE Orders SET status = 3 WHERE id = $this->id";
         $result = self::$connection->query($sql);
-
-        if($result == true) {
+        if($result !== FALSE) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    public function changeStatusToPaid()
-    {
+    public function changeStatusToPaid(){
         $sql = "UPDATE Orders SET status = 2 WHERE id = $this->id";
         $result = self::$connection->query($sql);
-
-        $this->updatePriceSum();
-
         if($result == true) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    public function changeStatusToDo()
-    {
+    public function changeStatusToDo(){
         $sql = "UPDATE Orders SET status = 1 WHERE id = $this->id";
         $result = self::$connection->query($sql);
-
-        $this->updatePriceSum();
-
         if($result == true) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    public function removeOrder()
-    {
+    public function removeOrder(){
         $sql = "DELETE FROM Orders WHERE id = $this->id";
         $result = self::$connection->query($sql);
-
         if($result == true) {
             return true;
-        } else {
-            return false;
         }
-
+        return false;
     }
-
 
 }

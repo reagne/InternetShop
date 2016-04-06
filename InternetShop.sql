@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Czas wygenerowania: 21 Lut 2016, 18:42
--- Wersja serwera: 5.5.47-0ubuntu0.14.04.1
--- Wersja PHP: 5.5.9-1ubuntu4.14
+-- Czas wygenerowania: 06 Kwi 2016, 17:33
+-- Wersja serwera: 5.5.44-0ubuntu0.14.04.1
+-- Wersja PHP: 5.5.9-1ubuntu4.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `Clients` (
   `address` varchar(150) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 --
 -- Zrzut danych tabeli `Clients`
@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS `Clients` (
 INSERT INTO `Clients` (`id`, `first_name`, `last_name`, `email`, `password`, `address`) VALUES
 (1, 'Ewelina', 'Kozio³', 'ew@wp.pl', '$2y$11$qOz.XBZ6UODRtRegnpwzsOjnhL/NZNSeTSXcFkWVFCK05fbdLOoFy', 'ul. Jagienki 6\r\n67-100 Nowa Sól'),
 (3, 'Andrzej', 'Koala', 'andrzej@wp.pl', '$2y$11$BTDLr2J8MOzz7RApSPZ4D.BIgwwZ6YDGTH1iq0P/hLGt0fyf6D0XS', 'ul. Opolska 2\r\n34-100 O³awa'),
-(5, 'Robert', 'Man', 'robert@wp.pl', '$2y$11$EZULwjgNPQgCH/T67M4PMupmeDqwVJ7exnr.hM6Jyehp8WOonk05G', 'ul. Kileonajkn 4');
+(5, 'Robert', 'Man', 'robert@wp.pl', '$2y$11$EZULwjgNPQgCH/T67M4PMupmeDqwVJ7exnr.hM6Jyehp8WOonk05G', 'ul. Kileonajkn 4'),
+(7, 'Test', 'Test', 'test@test.pl', '$2y$11$0w3aMSxjs/HDcCxBDbxzd.DM/jc4aycLc2HlomZsoFEKIxvWJPLcC', 'Hasło to test');
 
 -- --------------------------------------------------------
 
@@ -103,7 +104,14 @@ CREATE TABLE IF NOT EXISTS `Images` (
   `path_to_file` varchar(280) CHARACTER SET utf8 COLLATE utf8_polish_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Zrzut danych tabeli `Images`
+--
+
+INSERT INTO `Images` (`id`, `product_id`, `path_to_file`) VALUES
+(1, 1, 'src/images/1_hands.jpg');
 
 -- --------------------------------------------------------
 
@@ -115,20 +123,23 @@ CREATE TABLE IF NOT EXISTS `Orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `client_id` int(11) NOT NULL,
   `status` int(11) DEFAULT NULL,
-  `price_sum` double DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `client_id` (`client_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Zrzut danych tabeli `Orders`
 --
 
-INSERT INTO `Orders` (`id`, `client_id`, `status`, `price_sum`) VALUES
-(1, 1, 2, 4034.98),
-(14, 1, 3, 0),
-(15, 3, 3, NULL),
-(17, 1, 2, 5827.92);
+INSERT INTO `Orders` (`id`, `client_id`, `status`) VALUES
+(1, 1, 2),
+(14, 1, 3),
+(15, 3, 3),
+(17, 1, 2),
+(18, 1, 0),
+(20, 1, 0),
+(21, 1, 0),
+(22, 7, 2);
 
 -- --------------------------------------------------------
 
@@ -152,9 +163,9 @@ CREATE TABLE IF NOT EXISTS `Products` (
 --
 
 INSERT INTO `Products` (`id`, `name`, `price`, `description`, `category`, `active`) VALUES
-(1, 'łóżko', 1289, 'drewniane, mocne', 1, 1),
-(2, 'sofa', 1456.98, 'rozkładana sofa', 1, 0),
-(3, 'test', 123, 'jgjgj', 1, 0),
+(1, 'łóżko', 1289, 'drewniane, mocne i eleganckie', 1, 1),
+(2, 'sofa', 1456.98, 'rozkładana sofa', 1, 1),
+(3, 'test', 123, 'jgjgj', 1, 1),
 (4, 'test1', 12, 'testtt', 2, 1),
 (5, 'bia?a', 2, 'kredka', 1, 1);
 
@@ -173,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `Products_Orders` (
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   KEY `order_id` (`order_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Zrzut danych tabeli `Products_Orders`
@@ -182,7 +193,8 @@ CREATE TABLE IF NOT EXISTS `Products_Orders` (
 INSERT INTO `Products_Orders` (`id`, `product_id`, `order_id`, `product_quantity`, `product_price`) VALUES
 (1, 1, 1, 3, 0),
 (2, 2, 1, 2, 0),
-(4, 2, 17, 4, 0);
+(4, 2, 17, 4, 0),
+(10, 1, 22, 1, 1289);
 
 --
 -- Ograniczenia dla zrzutów tabel

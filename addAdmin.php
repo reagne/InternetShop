@@ -5,6 +5,7 @@ require_once("./src/connection.php");
 if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
+require_once("./src/Header.php");
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
@@ -16,7 +17,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo("Nie udało się dodać administratora");
     }
-
 }
 
 ?>
@@ -41,5 +41,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         </label>
     </p>
     <input type="submit" value="Dodaj">
-
 </form>
+<?php
+require_once("./src/Footer.php");
+?>

@@ -5,6 +5,7 @@ require_once("./src/connection.php");
 if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
+require_once("./src/Header.php");
 
 echo("<a href='ordersPanel.php?id=1'>Złożone</a>" . "  ");
 echo("<a href='ordersPanel.php?id=2'>Zapłacone</a>" . "  ");
@@ -71,11 +72,7 @@ foreach ($allOrders as $orderToSee) {
         echo("<td>{$orderToSee->getStatus()}</td>");
         echo("<td>{$orderToSee->getPriceSum()}</td>");
         echo("<td><a href='orderSite.php?id=$orderId'>Przejdź</a></td>");
-
-
         echo("</tr>");
-
     }
-
-
 }
+require_once("./src/Footer.php");

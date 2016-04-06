@@ -6,6 +6,8 @@ if (!isset($_SESSION['clientId']) && !(isset($_SESSION['adminId']))) {
     header("Location: index.php");
 }
 
+require_once("./src/Header.php");
+
 $clientId = $_SESSION['clientId'];
 
 if (isset($_SESSION['adminId'])) {
@@ -35,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-?>
+require_once("./src/Footer.php");
 
 
 

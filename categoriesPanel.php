@@ -1,11 +1,11 @@
 <?php
-
-
 require_once("./src/connection.php");
 
 if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
+
+require_once("./src/Header.php");
 
 if(isset($_GET['remove'])) {
     $categoryIdToRemove = $_GET['id'];
@@ -53,6 +53,7 @@ foreach ($allCategories as $categoryToShow) {
 }
 echo("</table>");
 
+require_once("./src/Footer.php");
 
 
 

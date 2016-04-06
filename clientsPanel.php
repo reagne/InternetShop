@@ -6,6 +6,8 @@ if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
 
+require_once("./src/Header.php");
+
 $allClients = Client::GetAllClients();
 
 //var_dump($allClients);
@@ -26,3 +28,5 @@ foreach($allClients as $clientToSee){
     echo("</tr>");
 
 }
+
+require_once("./src/Footer.php");

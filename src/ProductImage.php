@@ -10,7 +10,7 @@ class ProductImage
     // Dodawanie obrazka do produktu
     static public function AddNewImage($product_id, $filePath)
     {
-        $sql = "INSERT INTO Images(product_id, path_to_file) VALUES('$product_id', '$filePath')";
+        $sql = "INSERT INTO Images(product_id, path_to_file) VALUES ('$product_id', '$filePath')";
         $result = self::$connection->query($sql);
 
         if ($result !== FALSE) {

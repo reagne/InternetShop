@@ -1,6 +1,7 @@
 <?php
 
 require_once("./src/connection.php");
+require_once("./src/Header.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //zabezpieczyć żeby rzeczy nie były puste w środku metody register client. !!
@@ -66,3 +67,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </p>
     </form>
 </fieldset>
+<?php
+require_once("./src/Footer.php");

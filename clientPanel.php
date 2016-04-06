@@ -1,11 +1,12 @@
 <?php
 
-
 require_once("./src/connection.php");
 
 if (!isset($_SESSION['clientId']) && !(isset($_SESSION['adminId']))) {
     header("Location: index.php");
 }
+
+require_once("./src/Header.php");
 
 $clientId = $_SESSION['clientId'];
 
@@ -61,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo("Zmiana hasła nieudana <br>");
         }
     }
-
 }
 ?>
 
@@ -111,22 +111,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </fieldset>
     <?php endif; ?>
     <input type="submit" value="Zmień">
-
 </form>
 
 <?php
-
 
 $allClientOrders = $client->getAllMyOrders();
 //var_dump($allClientOrders);
 
 echo("<h2>Twoje zamówienia:</h2>");
 $length = count($allClientOrders);
-
 foreach($allClientOrders as $orderToShow){
     echo("<h3>Zamówienie numer: " . $length . "</h3>");
-    echo("Status: " . $orderToShow->getStatus() . "</br>");
-    echo("Suma: " .$orderToShow->getPriceSum() . "</br>");
-    echo("<a href='orderSite.php?id={$orderToShow->getId()}'>Pokaż szczegóły</a>");
+    echo("Status: ");
+    switch ($orderToShow->getStatus()) {
+        case 0: echo("Lista życzeń"); break;
+        case 1: echo("Zamówienie złożone"); break;
+        case 2: echo("Zamówienie opłacone"); break;
+        case 3: echo("Zamówienie zrealizowane"); break;}
+    echo("</br>");
+    $orderId = $orderToShow->getId();
+    $price = Products_Order::GetSumPriceByOrderId($orderId);
+    echo("Suma: " . $price . "</br>");
+    echo("<a href='orderSite.php?id=$orderId'>Pokaż szczegóły</a>");
     $length--;
 }
+
+require_once("./src/Footer.php");

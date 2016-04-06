@@ -1,4 +1,13 @@
 <?php
+/* In PHPMyAdmin:
+create table Admins(
+    id int AUTO_INCREMENT NOT NULL,
+    email varchar(100) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+    password varchar(70) CHARACTER SET utf8 COLLATE utf8_polish_ci NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY email (email)
+);
+*/
 
 class Admin
 {
@@ -24,7 +33,7 @@ class Admin
         $sql = "INSERT INTO Admins(email, password) VALUES ('$newEmail', '$hashedPassword')";
 
         $result = self::$connection->query($sql);
-        if ($result === TRUE) {
+        if ($result !== FALSE) {
             $newAdmin = new Admin(self::$connection->insert_id, $newEmail);
             return $newAdmin;
         }
@@ -52,7 +61,6 @@ class Admin
 
     private $id;
     private $email;
-
 
     public function __construct($newId, $newEmail)
     {
@@ -96,7 +104,7 @@ class Admin
                     $sql2 = "UPDATE Admins SET password='$hashedPassword' WHERE id=$this->id";
                     $result = self::$connection->query($sql2);
 
-                    if ($result == true) {
+                    if ($result !== FALSE) {
                         return true;
                     } else {
                         return false;

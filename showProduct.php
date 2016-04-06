@@ -1,9 +1,12 @@
 <?php
 
 require_once("./src/connection.php");
+require_once("./src/Header.php");
 
 if (isset($_SESSION['adminId'])) {
-    if (!(isset($_GET['addImage']))) {
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $product = Product::GetProductById($id);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = intval($_POST['id']);
             $name = $_POST['newName'];
@@ -15,61 +18,11 @@ if (isset($_SESSION['adminId'])) {
             $product = Product::GetProductById($id);
 
             if ($product->updateProductInfo($name, $price, $description, $category, $active)) {
-                header("Location: productsPanel.php?show=$category");
+                header("Location: productsPanel.php");
             } else {
                 echo("Nie udało się edytować produktu.");
             }
         }
-
-        /*
-        $id = $_GET['id'];
-        $product = Product::GetProductById($id);
-
-        echo("
-        <form action='showProduct.php' method='post'>
-        <p>
-        <label>Id (nie podlega edycji)
-        <input type='text' name='id' value='{$product->getId()}'</label>
-    </p>
-        <p>
-        <label>
-        Nazwa:
-        <input type='text' name='newName' value='{$product->getName()}'>
-    </label>
-    </p>
-    <p>
-        <label>
-        Cena:
-        <input type='text' name='newPrice' value='{$product->getPrice()}'>
-    </label>
-    </p>
-    <p>
-        <label>
-        Opis
-        <textarea name='newDescription'>{$product->getDescription()}</textarea>>
-    </label>
-    </p>
-    <p>
-        <label>
-        Dostępność:
-        <input type='text' name='newActive' value='{$product->getActive()}'>
-    </label>
-    </p>
-    <p>
-        <label>
-        Kategoria
-        <input type='text' name='newCategory' value='{$product->getCategory()}'>
-    </label>
-    </p>
-    <input type='submit' value='Edytuj'>
-    </form>");
-    */
-    }
-
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $product = Product::GetProductById($id);
-
         echo("
         <form method='post'>
         <p><label>Id (nie podlega edycji)<input type='text' name='id' value='{$product->getId()}'</label></p>
@@ -96,14 +49,14 @@ if (isset($_SESSION['adminId'])) {
         $product_id = intval($_GET['addImage']);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $filesName = $_FILES['upload']['name'];
-            $uploadfile = '/src/images/' . basename($product_id.'_'.$_FILES['upload']['name']);
-            if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)){
+            $uploadfile = 'src/images/' . basename($product_id . '_' . $_FILES['upload']['name']);
+            if (move_uploaded_file($_FILES['upload']['tmp_name'], $uploadfile)) {
                 echo "File is valid, and was successfully uploaded.\n";
             } else {
                 echo "Possible file upload attack!\n";
             }
-            var_dump($uploadfile);
-            //$newImage = ProductImage::AddNewImage($product_id, $uploadfile);
+            //var_dump($uploadfile);
+            $newImage = ProductImage::AddNewImage($product_id, $uploadfile);
         }
         echo("
         <form method='post' enctype='multipart/form-data'>
@@ -113,17 +66,6 @@ if (isset($_SESSION['adminId'])) {
         ");
     }
 } else {
-    // MENU KATEGORII dla niezalogowanych użytkowników
-    if(!isset($_SESSION['clientId'])) {
-        $categories = Category::GetAllCategories();
-        echo("KATEGORIE: <a href='showProduct.php?category=all'>wszystkie</a>  | ");
-        foreach ($categories as $category) {
-            echo("
-            <a href='showProduct.php?category={$category->getName()}'>{$category->getName()}</a> |
-            ");
-        }
-        echo("<a href='showProduct.php?category=other'>inne</a><br>");
-    }
     // Wyświetlanie produktów z wybranej kategorii:
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $category = $_GET['category'];
@@ -140,14 +82,14 @@ if (isset($_SESSION['adminId'])) {
                     $avaible = "Nie";
                 }
                 echo("<tr>
-                    <td>{$product->getName()}</td>
-                    <td>{$product->getPrice()} </td>
-                    <td>$avaible </td>
-                    <td>{$product->getDescription()}</td>
-                    <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
-                </tr>");
+                <td>{$product->getName()}</td>
+                <td>{$product->getPrice()} </td>
+                <td>$avaible </td>
+                <td>{$product->getDescription()}</td>
+                <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+            </tr>");
             }
-        // Kategoria wyświetlająca produkty bez żadnej kategorii
+            // Kategoria wyświetlająca produkty bez żadnej kategorii
         } elseif ($category == "other") {
             $products = Product::getAllWithoutCategory();
             echo("<h1>Inne</h1>");
@@ -158,14 +100,14 @@ if (isset($_SESSION['adminId'])) {
                     $avaible = "Nie";
                 }
                 echo("<tr>
-                <td>{$product->getName()}</td>
-                <td>{$product->getPrice()} </td>
-                <td>$avaible</td>
-                <td>{$product->getDescription()}</td>
-                <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
-                </tr>");
+            <td>{$product->getName()}</td>
+            <td>{$product->getPrice()} </td>
+            <td>$avaible</td>
+            <td>{$product->getDescription()}</td>
+            <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+            </tr>");
             }
-        //Kategorie wprowadzone w bazie danych
+            //Kategorie wprowadzone w bazie danych
         } else {
             $categories = Category::GetAllCategories();
             foreach ($categories as $cat) {
@@ -179,12 +121,12 @@ if (isset($_SESSION['adminId'])) {
                             $avaible = "Nie";
                         }
                         echo("<tr>
-                        <td>{$product->getName()}</td>
-                        <td>{$product->getPrice()} </td>
-                        <td>$avaible </td>
-                        <td>{$product->getDescription()}</td>
-                        <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
-                        </tr>");
+                    <td>{$product->getName()}</td>
+                    <td>{$product->getPrice()} </td>
+                    <td>$avaible </td>
+                    <td>{$product->getDescription()}</td>
+                    <td><a href='productsite.php?id={$product->getId()}'>Zobacz</a></td>
+                    </tr>");
                     }
                 }
             }
@@ -192,5 +134,4 @@ if (isset($_SESSION['adminId'])) {
         echo("</table>");
     }
 }
-
-
+require_once("./src/Footer.php");

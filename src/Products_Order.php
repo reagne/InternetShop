@@ -4,13 +4,11 @@ class Products_Order
 {
     static private $connection = null;
 
-    static public function SetConnection(mysqli $newConnection)
-    {
+    static public function SetConnection(mysqli $newConnection){
         Products_Order::$connection = $newConnection;
     }
 
-    static public function GetPOById($id)
-    {
+    static public function GetPOById($id){
         $sql = "SELECT * FROM Products_Orders WHERE id = $id";
         $result = self::$connection->query($sql);
 
@@ -25,28 +23,47 @@ class Products_Order
         } else {
             return false;
         }
-
     }
 
-    static public function createPO($productId, $productQuantity)
-    {
+    static public function CreatePO($newProductId, $newOrderId, $newProductQuantity, $newProductPrice){
+        $sql = "INSERT INTO Products_Orders(product_id, order_id, product_quantity, product_price) VALUES ($newProductId, $newOrderId, $newProductQuantity, $newProductPrice)";
+        $result = self::$connection->query($sql);
 
+        if ($result !== FALSE) {
+            $newPO = new Products_Order(self::$connection->insert_id, $newProductId, $newOrderId, $newProductQuantity, $newProductPrice);
+            return $newPO;
+        }
+        return false;
+    }
 
+    static public function GetSumPriceByOrderId($orderId){
+        $sumPrice = 0;
+        $sql = "SELECT product_quantity, product_price FROM Products_Orders WHERE order_id = $orderId";
+        $result = self::$connection->query($sql);
+        if($result !== FALSE){
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $sumPrice = $sumPrice + ($row['product_quantity'] * $row['product_price']);
+                }
+                return $sumPrice;
+            }
+        }
+        return false;
     }
 
     private $id;
     private $productId;
     private $orderId;
     private $productQuantity;
-    //private $productPrice;
-    //@TODO czy na pewno jest na to potrzebne w bazie danych?
+    private $productPrice;
 
-    public function __construct($newId, $newProductId, $newOrderId, $newProductQuantity)
+    public function __construct($newId, $newProductId, $newOrderId, $newProductQuantity, $newProductPrice)
     {
         $this->id = intval($newId);
         $this->productId = intval($newProductId);
         $this->orderId = intval($newOrderId);
         $this->setProductQuantity($newProductQuantity);
+        $this->setProductPrice($newProductPrice);   // dajemy tutaj productPrice, gdyż cena produktu może się zmienić później
     }
 
     public function getId()
@@ -69,9 +86,19 @@ class Products_Order
         return $this->productQuantity;
     }
 
+    public function getProductPrice()
+    {
+        return $this->productPrice;
+    }
+
     public function setProductQuantity($productQuantity)
     {
         $this->productQuantity = intval($productQuantity);
+    }
+
+    public function setProductPrice($productPrice)
+    {
+        $this->productPrice = floatval($productPrice);
     }
 
     public function saveQuantityToDB($newQuantity)
@@ -79,12 +106,10 @@ class Products_Order
         $sql = "UPDATE Products_Orders SET product_quantity = $newQuantity WHERE id = $this->id";
         $result = self::$connection->query($sql);
 
-        if ($result == true) {
+        if ($result !== FALSE) {
             return true;
-        } else {
-            return false;
         }
-
+        return false;
     }
 
     public function removePO()
@@ -92,13 +117,10 @@ class Products_Order
         $sql = "DELETE FROM Products_Orders WHERE id = $this->id";
         $result = self::$connection->query($sql);
 
-        if($result == true) {
+        if($result !== FALSE) {
             return true;
-        } else {
-            return false;
         }
-
+        return false;
     }
-
 
 }

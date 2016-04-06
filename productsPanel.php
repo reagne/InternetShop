@@ -1,15 +1,12 @@
 <?php
 
-
 require_once("./src/connection.php");
 
 if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
-
-
+require_once("./src/Header.php");
 if(isset($_GET['show'])) {
-
     $categoryId = $_GET['show'];
     $category = Category::GetCategoryById($categoryId);
 
@@ -41,7 +38,6 @@ if(isset($_GET['show'])) {
 } else {
     $allProducts = Product::GetAllProducts();
 
-
     echo("<h1>Wszystkie produkty</h1>");
 
     echo("<table <tr><td>Id</td><td>Nazwa</td><td>Cena</td><td>Opis</td><td>Dostępność</td><td>Edytuj</td><td>Dezaktywuj</td><td>Dodaj obrazek</td></tr>");
@@ -63,3 +59,5 @@ if(isset($_GET['show'])) {
 
     }
 }
+
+require_once("./src/Footer.php");

@@ -5,6 +5,7 @@ require_once("./src/connection.php");
 if (!isset($_SESSION['adminId'])) {
     header("Location: index.php");
 }
+require_once("./src/Header.php");
 
 ?>
 
@@ -27,3 +28,5 @@ if (!isset($_SESSION['adminId'])) {
     Dodaj administratora:
     <a href='addAdmin.php'>Dodaj</a>
 </p>
+<?php
+require_once("./src/Footer.php");
