@@ -25,7 +25,6 @@ class Product
     {
         $sql = "SELECT * FROM Products WHERE id = $productId";
         $result = self::$connection->query($sql);
-
         if ($result !== FALSE) {
             if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
@@ -40,7 +39,6 @@ class Product
     {
         $sql = "SELECT * FROM Products";
         $result = self::$connection->query($sql);
-
         if ($result !== FALSE) {
             $ret = [];
             if ($result->num_rows > 0) {

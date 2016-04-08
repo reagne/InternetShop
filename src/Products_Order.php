@@ -7,16 +7,13 @@ class Products_Order
     static public function SetConnection(mysqli $newConnection){
         Products_Order::$connection = $newConnection;
     }
-
     static public function GetPOById($id){
         $sql = "SELECT * FROM Products_Orders WHERE id = $id";
         $result = self::$connection->query($sql);
-
         if ($result == true) {
            if($result->num_rows == 1) {
                $row = $result->fetch_assoc();
-
-               $details = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity']);
+               $details = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity'], $row['product_price']);
                var_dump($details);
                return $details;
            }
@@ -24,18 +21,15 @@ class Products_Order
             return false;
         }
     }
-
     static public function CreatePO($newProductId, $newOrderId, $newProductQuantity, $newProductPrice){
         $sql = "INSERT INTO Products_Orders(product_id, order_id, product_quantity, product_price) VALUES ($newProductId, $newOrderId, $newProductQuantity, $newProductPrice)";
         $result = self::$connection->query($sql);
-
         if ($result !== FALSE) {
             $newPO = new Products_Order(self::$connection->insert_id, $newProductId, $newOrderId, $newProductQuantity, $newProductPrice);
             return $newPO;
         }
         return false;
     }
-
     static public function GetSumPriceByOrderId($orderId){
         $sumPrice = 0;
         $sql = "SELECT product_quantity, product_price FROM Products_Orders WHERE order_id = $orderId";
@@ -47,6 +41,32 @@ class Products_Order
                 }
                 return $sumPrice;
             }
+        }
+        return false;
+    }
+    static public function GetProductsByOrderId($orderId){
+        $sql = "SELECT product_id FROM Products_Orders WHERE order_id = $orderId";
+        $result = self::$connection->query($sql);
+        if($result !== FALSE){
+            $ret = [];
+            if($result->num_rows > 0){
+                while($row = $result->fetch_assoc()){
+                    $ret[] = $row['product_id'];
+                }
+                return $ret;
+            }
+        }
+        return false;
+    }
+    static public function GetPOByProductId($productId){
+        $sql = "SELECT * FROM Products_Orders WHERE product_id = $productId";
+        $result = self::$connection->query($sql);
+        if($result !== FALSE){
+            if($result->num_rows == 1){
+                $row = $result->fetch_assoc();
+                $ret = new Products_Order($row['id'], $row['product_id'], $row['order_id'], $row['product_quantity'], $row['product_price']);
+            }
+            return $ret;
         }
         return false;
     }
